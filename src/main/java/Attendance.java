@@ -20,7 +20,7 @@ import static javax.xml.bind.JAXBIntrospector.getValue;
 public class Attendance {
 
     public static void main(String[] args) throws Exception {
-        String worker = "1282";
+        String worker = "1543";
         Attendance attendance = new Attendance();
         File dir = new File("src/main/resources");
         FileFilter fileFilter = new WildcardFileFilter("*日报*.xlsx");
@@ -53,14 +53,14 @@ public class Attendance {
             }
             row_list.add(sheetRow);
             //遍历列cell
-//            for (int cellnum = 0; cellnum <= sheetRow.getLastCellNum(); cellnum++) {
-//                XSSFCell cell = sheetRow.getCell(cellnum);
-//                if (cell == null) {
-//                    continue;
-//                }
-//                System.out.print(" " + getValue(cell));
-//            }
-//            System.out.println();
+            for (int cellnum = 0; cellnum <= sheetRow.getLastCellNum(); cellnum++) {
+                XSSFCell cell = sheetRow.getCell(cellnum);
+                if (cell == null) {
+                    continue;
+                }
+                System.out.print(" " + getValue(cell));
+            }
+            System.out.println();
         }
         // 打开模板文件
         String model_path = "src/main/resources/model.xls";
