@@ -1,8 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -20,7 +17,7 @@ import static javax.xml.bind.JAXBIntrospector.getValue;
 public class Attendance {
 
     public static void main(String[] args) throws Exception {
-        String worker = "1543";
+        String worker = "1599";
         Attendance attendance = new Attendance();
         File dir = new File("src/main/resources");
         FileFilter fileFilter = new WildcardFileFilter("*日报*.xlsx");
@@ -112,27 +109,42 @@ public class Attendance {
             sheet.getRow(row_start_position).getCell(9).setCellValue(row_data.getCell(2).getStringCellValue());
 
             //最早
-            sheet.getRow(row_start_position).getCell(10).setCellValue(row_data.getCell(4).getStringCellValue());
+            sheet.getRow(row_start_position).getCell(10).setCellValue(row_data.getCell(7).getStringCellValue());
 
             //最晚
-            sheet.getRow(row_start_position).getCell(11).setCellValue(row_data.getCell(5).getStringCellValue());
+            sheet.getRow(row_start_position).getCell(11).setCellValue(row_data.getCell(8).getStringCellValue());
+            //计算加班时长
+            String latest = row_data.getCell(5).getStringCellValue();
+//            if (!latest.equals("--")){
+//                String[] nns = latest.split(":");
+//                int hour = Integer.parseInt(nns[0]);
+//                int min = Integer.parseInt(nns[1]);
+//                if (hour - 18 > 1)
+//                {
+//                    if (min -30 >=0)
+//                    {
+//                        double minutes = 0.5;
+//                    }
+//                }
+//
+//            }
 
             // 打卡次数
             try {
-                sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(6).getNumericCellValue());
+                sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(9).getNumericCellValue());
             }
             catch (Exception e){
-                sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(6).getStringCellValue());
+                sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(9).getStringCellValue());
             }
 
             // 时长
-            sheet.getRow(row_start_position).getCell(13).setCellValue(row_data.getCell(7).getStringCellValue());
+            sheet.getRow(row_start_position).getCell(13).setCellValue(row_data.getCell(11).getStringCellValue());
 
             // 详细
-            sheet.getRow(row_start_position).getCell(14).setCellValue(row_data.getCell(9).getStringCellValue());
+            sheet.getRow(row_start_position).getCell(14).setCellValue(row_data.getCell(13).getStringCellValue());
 
             // 假勤申请
-            sheet.getRow(row_start_position).getCell(15).setCellValue(row_data.getCell(8).getStringCellValue());
+            sheet.getRow(row_start_position).getCell(15).setCellValue(row_data.getCell(12).getStringCellValue());
 
             row_start_position +=1;
         }
