@@ -1,5 +1,8 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -17,7 +20,8 @@ import static javax.xml.bind.JAXBIntrospector.getValue;
 public class Attendance {
 
     public static void main(String[] args) throws Exception {
-        String worker = "1599";
+        String[] workers = {"1543"};
+        String name = "tbd";
         Attendance attendance = new Attendance();
         File dir = new File("src/main/resources");
         FileFilter fileFilter = new WildcardFileFilter("*日报*.xlsx");
@@ -37,126 +41,115 @@ public class Attendance {
         XSSFSheet s = data_workbook.getSheetAt(0);
         List<XSSFRow> row_list = Lists.newArrayList();
 
-        // 取出工号为worker的考勤数据
-        for (int rownum = 0; rownum <= s.getLastRowNum(); rownum++) {
-            XSSFRow sheetRow = s.getRow(rownum);
-            if (sheetRow == null) {
-                continue;
-            }
-            String id = sheetRow.getCell(3).getStringCellValue();
-            String date = sheetRow.getCell(1).getStringCellValue();
-            if (!id.equals(worker)) {
-                continue;
-            }
-            row_list.add(sheetRow);
-            //遍历列cell
-            for (int cellnum = 0; cellnum <= sheetRow.getLastCellNum(); cellnum++) {
-                XSSFCell cell = sheetRow.getCell(cellnum);
-                if (cell == null) {
+        for(String worker: workers){
+            // 取出工号为worker的考勤数据
+            for (int rownum = 0; rownum <= s.getLastRowNum(); rownum++) {
+                XSSFRow sheetRow = s.getRow(rownum);
+                if (sheetRow == null) {
                     continue;
                 }
-                System.out.print(" " + getValue(cell));
+                String id = sheetRow.getCell(3).getStringCellValue();
+                String date = sheetRow.getCell(1).getStringCellValue();
+                if (!id.equals(worker)) {
+                    continue;
+                }
+                row_list.add(sheetRow);
+                //遍历列cell
+                for (int cellnum = 0; cellnum <= sheetRow.getLastCellNum(); cellnum++) {
+                    XSSFCell cell = sheetRow.getCell(cellnum);
+                    if (cell == null) {
+                        continue;
+                    }
+                    System.out.print(" " + getValue(cell));
+                }
+                System.out.println();
             }
-            System.out.println();
-        }
-        // 打开模板文件
-        String model_path = "src/main/resources/model.xls";
-        HSSFWorkbook wb = attendance.openHSSFFile(model_path);
+            // 打开模板文件
+            String model_path = "src/main/resources/model.xls";
+            HSSFWorkbook wb = attendance.openHSSFFile(model_path);
 
-        HSSFSheet sheet = wb.getSheetAt(0);
-        HSSFRow row = sheet.getRow(0);
+            HSSFSheet sheet = wb.getSheetAt(0);
+            HSSFRow row = sheet.getRow(0);
 
-        FileOutputStream out = new FileOutputStream("src/main/resources/results.xls");
 
-        // 黄颜色底色表格单元格
-        HSSFCellStyle color_style = attendance.getStyle(wb, IndexedColors.YELLOW.getIndex());
-        // 无格式单元格
-        HSSFCellStyle without_color_style = attendance.getStyle(wb);
+            // 黄颜色底色表格单元格
+            HSSFCellStyle color_style = attendance.getStyle(wb, IndexedColors.YELLOW.getIndex());
+            // 无格式单元格
+            HSSFCellStyle without_color_style = attendance.getStyle(wb);
 
-        // 考勤记录开始位置
-        int row_start_position = 5;
-        // 考勤记录结束位置
-        int row_end_position = 5 + row_list.size();
+            // 考勤记录开始位置
+            int row_start_position = 5;
+            // 考勤记录结束位置
+            int row_end_position = 5 + row_list.size();
 
-        for (int i = row_list.size() - 1; i >= 0; i--) {
-            XSSFRow row_data = row_list.get(i);
-            String day = row_data.getCell(1).getStringCellValue();
-            // 设置格式
-            if (day.equals("星期六") || day.equals("星期日")) {
-                sheet.getRow(row_start_position).getCell(2).setCellStyle(color_style);
-                sheet.getRow(row_start_position).getCell(3).setCellStyle(color_style);
-                sheet.getRow(row_start_position).getCell(4).setCellStyle(color_style);
-                sheet.getRow(row_start_position).getCell(5).setCellStyle(color_style);
-                sheet.getRow(row_start_position).getCell(6).setCellStyle(color_style);
+            for (int i = row_list.size() - 1; i >= 0; i--) {
+                XSSFRow row_data = row_list.get(i);
+                String day = row_data.getCell(1).getStringCellValue();
+                // 设置格式
+                if (day.equals("星期六") || day.equals("星期日")) {
+                    sheet.getRow(row_start_position).getCell(2).setCellStyle(color_style);
+                    sheet.getRow(row_start_position).getCell(3).setCellStyle(color_style);
+                    sheet.getRow(row_start_position).getCell(4).setCellStyle(color_style);
+                    sheet.getRow(row_start_position).getCell(5).setCellStyle(color_style);
+                    sheet.getRow(row_start_position).getCell(6).setCellStyle(color_style);
+                }
+                sheet.getRow(row_start_position).getCell(7).setCellStyle(without_color_style);
+                sheet.getRow(row_start_position).getCell(8).setCellStyle(without_color_style);
+                sheet.getRow(row_start_position).getCell(9).setCellStyle(without_color_style);
+                sheet.getRow(row_start_position).getCell(10).setCellStyle(without_color_style);
+                sheet.getRow(row_start_position).getCell(11).setCellStyle(without_color_style);
+                sheet.getRow(row_start_position).getCell(12).setCellStyle(without_color_style);
+                sheet.getRow(row_start_position).getCell(13).setCellStyle(without_color_style);
+                sheet.getRow(row_start_position).getCell(14).setCellStyle(without_color_style);
+                sheet.getRow(row_start_position).getCell(15).setCellStyle(without_color_style);
+
+                //日期
+                sheet.getRow(row_start_position).getCell(7).setCellValue(row_data.getCell(0).getStringCellValue());
+
+                // 星期
+                sheet.getRow(row_start_position).getCell(8).setCellValue(row_data.getCell(1).getStringCellValue());
+
+                // 姓名
+                sheet.getRow(row_start_position).getCell(9).setCellValue(row_data.getCell(2).getStringCellValue());
+                name = row_data.getCell(2).getStringCellValue();
+                //最早
+                sheet.getRow(row_start_position).getCell(10).setCellValue(row_data.getCell(4).getStringCellValue());
+
+                //最晚
+                sheet.getRow(row_start_position).getCell(11).setCellValue(row_data.getCell(5).getStringCellValue());
+
+                // 打卡次数
+                try {
+                    sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(6).getNumericCellValue());
+                }
+                catch (Exception e){
+                    sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(6).getStringCellValue());
+                }
+
+                // 时长
+                sheet.getRow(row_start_position).getCell(13).setCellValue(row_data.getCell(7).getStringCellValue());
+
+                // 详细
+                sheet.getRow(row_start_position).getCell(14).setCellValue(row_data.getCell(9).getStringCellValue());
+
+                // 假勤申请
+                sheet.getRow(row_start_position).getCell(15).setCellValue(row_data.getCell(8).getStringCellValue());
+
+                row_start_position +=1;
             }
-            sheet.getRow(row_start_position).getCell(7).setCellStyle(without_color_style);
-            sheet.getRow(row_start_position).getCell(8).setCellStyle(without_color_style);
-            sheet.getRow(row_start_position).getCell(9).setCellStyle(without_color_style);
-            sheet.getRow(row_start_position).getCell(10).setCellStyle(without_color_style);
-            sheet.getRow(row_start_position).getCell(11).setCellStyle(without_color_style);
-            sheet.getRow(row_start_position).getCell(12).setCellStyle(without_color_style);
-            sheet.getRow(row_start_position).getCell(13).setCellStyle(without_color_style);
-            sheet.getRow(row_start_position).getCell(14).setCellStyle(without_color_style);
-            sheet.getRow(row_start_position).getCell(15).setCellStyle(without_color_style);
-
-            //日期
-            sheet.getRow(row_start_position).getCell(7).setCellValue(row_data.getCell(0).getStringCellValue());
-
-            // 星期
-            sheet.getRow(row_start_position).getCell(8).setCellValue(row_data.getCell(1).getStringCellValue());
-
-            // 姓名
-            sheet.getRow(row_start_position).getCell(9).setCellValue(row_data.getCell(2).getStringCellValue());
-
-            //最早
-            sheet.getRow(row_start_position).getCell(10).setCellValue(row_data.getCell(7).getStringCellValue());
-
-            //最晚
-            sheet.getRow(row_start_position).getCell(11).setCellValue(row_data.getCell(8).getStringCellValue());
-            //计算加班时长
-            String latest = row_data.getCell(5).getStringCellValue();
-//            if (!latest.equals("--")){
-//                String[] nns = latest.split(":");
-//                int hour = Integer.parseInt(nns[0]);
-//                int min = Integer.parseInt(nns[1]);
-//                if (hour - 18 > 1)
-//                {
-//                    if (min -30 >=0)
-//                    {
-//                        double minutes = 0.5;
-//                    }
-//                }
-//
-//            }
-
-            // 打卡次数
-            try {
-                sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(9).getNumericCellValue());
-            }
-            catch (Exception e){
-                sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(9).getStringCellValue());
-            }
-
-            // 时长
-            sheet.getRow(row_start_position).getCell(13).setCellValue(row_data.getCell(11).getStringCellValue());
-
-            // 详细
-            sheet.getRow(row_start_position).getCell(14).setCellValue(row_data.getCell(13).getStringCellValue());
-
-            // 假勤申请
-            sheet.getRow(row_start_position).getCell(15).setCellValue(row_data.getCell(12).getStringCellValue());
-
-            row_start_position +=1;
-        }
 
 //        row = sheet.getRow(row_start_position);
 //        Cell cell1 = row.getCell((short) 2);
 //        cell1.setCellValue(2000);
+            String resultPath = "src/main/resources/" + name + "-技术部考勤2022-02.xls";
+            FileOutputStream out = new FileOutputStream(resultPath);
 
-        wb.setForceFormulaRecalculation(true);
-        out.flush();
-        wb.write(out);
-        out.close();
+            wb.setForceFormulaRecalculation(true);
+            out.flush();
+            wb.write(out);
+            out.close();
+        }
+
     }
 
     //设置单元格格式
