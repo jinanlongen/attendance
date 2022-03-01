@@ -20,7 +20,7 @@ import static javax.xml.bind.JAXBIntrospector.getValue;
 public class Attendance {
 
     public static void main(String[] args) throws Exception {
-        String[] workers = {"1543"};
+        String[] workers = {"1543", "1564"};
         String name = "tbd";
         Attendance attendance = new Attendance();
         File dir = new File("src/main/resources");
@@ -35,13 +35,13 @@ public class Attendance {
             }
             data_path = file.getPath();
         }
+        for (String worker : workers) {
 
-        // 打开文件
-        XSSFWorkbook data_workbook = attendance.openXSSFFile(data_path);
-        XSSFSheet s = data_workbook.getSheetAt(0);
-        List<XSSFRow> row_list = Lists.newArrayList();
+            // 打开文件
+            XSSFWorkbook data_workbook = attendance.openXSSFFile(data_path);
+            XSSFSheet s = data_workbook.getSheetAt(0);
+            List<XSSFRow> row_list = Lists.newArrayList();
 
-        for(String worker: workers){
             // 取出工号为worker的考勤数据
             for (int rownum = 0; rownum <= s.getLastRowNum(); rownum++) {
                 XSSFRow sheetRow = s.getRow(rownum);
@@ -121,8 +121,7 @@ public class Attendance {
                 // 打卡次数
                 try {
                     sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(6).getNumericCellValue());
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     sheet.getRow(row_start_position).getCell(12).setCellValue(row_data.getCell(6).getStringCellValue());
                 }
 
@@ -135,7 +134,7 @@ public class Attendance {
                 // 假勤申请
                 sheet.getRow(row_start_position).getCell(15).setCellValue(row_data.getCell(8).getStringCellValue());
 
-                row_start_position +=1;
+                row_start_position += 1;
             }
 
 //        row = sheet.getRow(row_start_position);
